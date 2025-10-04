@@ -112,9 +112,10 @@ export function Sidebar({ className }: SidebarProps) {
     [location.pathname],
   );
 
-  const [openSections, setOpenSections] = useState<string[]>(() =>
-    activeSectionIds.length > 0 ? activeSectionIds : [sidebarSections[0]?.id].filter(Boolean) as string[],
-  );
+  const [openSections, setOpenSections] = useState<string[]>(() => {
+    if (activeSectionIds.length > 0) return activeSectionIds;
+    return sidebarSections.length > 0 ? [sidebarSections[0].id] : [];
+  });
 
   useEffect(() => {
     if (activeSectionIds.length === 0) return;
@@ -169,7 +170,7 @@ export function Sidebar({ className }: SidebarProps) {
         <Accordion
           type="multiple"
           value={openSections}
-          onValueChange={(value) => setOpenSections(value as string[])}
+          onValueChange={(value) => setOpenSections(value)}
           className="space-y-3"
         >
           {sidebarSections.map((section) => (
