@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { LucideIcon } from 'lucide-react';
 import {
@@ -13,17 +14,16 @@ import {
   CreditCard,
   DollarSign,
   Calculator,
-  Truck,
-  Printer,
   Calendar,
   BarChart3,
   Settings,
   LogOut,
 } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+import { cn } from '@/lib/utils';
 
 interface SidebarItem {
   id: string;
@@ -38,14 +38,12 @@ interface SidebarSection {
   items: SidebarItem[];
 }
 
+const coreItems: SidebarItem[] = [
+  { id: 'dashboard', label: 'الرئيسية', icon: Home, path: '/admin' },
+  { id: 'contracts', label: 'العقود', icon: FileText, path: '/admin/contracts' },
+];
+
 const sidebarSections: SidebarSection[] = [
-  {
-    id: 'overview',
-    title: 'الرئيسية',
-    items: [
-      { id: 'dashboard', label: 'الرئيسية', icon: Home, path: '/admin' },
-    ],
-  },
   {
     id: 'billboards',
     title: 'إدارة اللوحات',
@@ -78,18 +76,13 @@ const sidebarSections: SidebarSection[] = [
   {
     id: 'pricing',
     title: 'التسعير والفواتير',
-    items: [
-      { id: 'pricing', label: 'أسعار الإيجار', icon: Calculator, path: '/admin/pricing' },
-      { id: 'installation', label: 'أسعار التركيب والطباعة', icon: Truck, path: '/admin/installation-pricing' },
-      { id: 'print_invoice', label: 'طباعة فاتورة التركيب', icon: Printer, path: '/admin/print-installation-invoice' },
-    ],
+    items: [{ id: 'pricing', label: 'أسعار الإيجار', icon: Calculator, path: '/admin/pricing' }],
   },
   {
     id: 'other',
     title: 'أخرى',
     items: [
       { id: 'booking_requests', label: 'طلبات الحجز', icon: Calendar, path: '/admin/booking-requests' },
-      { id: 'contracts', label: 'العقود', icon: FileText, path: '/admin/contracts' },
       { id: 'users', label: 'المستخدمين', icon: Users, path: '/admin/users' },
       { id: 'reports', label: 'التقارير والإحصائيات', icon: BarChart3, path: '/admin/reports' },
       { id: 'settings', label: 'الإعدادات', icon: Settings, path: '/admin/settings' },
@@ -111,8 +104,31 @@ export function Sidebar({ className }: SidebarProps) {
     return location.pathname.startsWith(path);
   };
 
+  const activeSectionIds = useMemo(
+    () =>
+      sidebarSections
+        .filter((section) => section.items.some((item) => location.pathname.startsWith(item.path)))
+        .map((section) => section.id),
+    [location.pathname],
+  );
+
+  const [openSections, setOpenSections] = useState<string[]>(() =>
+    activeSectionIds.length > 0 ? activeSectionIds : [sidebarSections[0]?.id].filter(Boolean) as string[],
+  );
+
+  useEffect(() => {
+    if (activeSectionIds.length === 0) return;
+    setOpenSections((prev) => Array.from(new Set([...prev, ...activeSectionIds])));
+  }, [activeSectionIds]);
+
+  const handleNavigate = (path: string) => {
+    if (location.pathname !== path) {
+      navigate(path);
+    }
+  };
+
   return (
-    <div className={cn('flex flex-col h-full bg-sidebar text-sidebar-foreground', className)}>
+    <div className={cn('flex flex-col bg-sidebar text-sidebar-foreground overflow-hidden', className)}>
       <div className="p-6 border-b border-sidebar-border">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center shadow-gold">
@@ -126,38 +142,74 @@ export function Sidebar({ className }: SidebarProps) {
       </div>
 
       <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
-        {sidebarSections.map((section) => (
-          <div key={section.id} className="space-y-3">
-            <div className="px-2 text-xs font-semibold uppercase tracking-wide text-sidebar-foreground/60">
-              {section.title}
-            </div>
-            <div className="space-y-2">
-              {section.items.map((item) => {
-                const Icon = item.icon;
-                const active = isActive(item.path);
+        <div className="space-y-2">
+          {coreItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.path);
+            return (
+              <Button
+                key={item.id}
+                variant={active ? 'default' : 'ghost'}
+                size="default"
+                onClick={() => handleNavigate(item.path)}
+                className={cn(
+                  'w-full flex-row-reverse justify-start gap-3 h-11 px-4 rounded-xl transition-colors',
+                  active
+                    ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-lg hover:bg-sidebar-primary'
+                    : 'text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground',
+                )}
+              >
+                <span className="flex-1 text-right font-medium text-sm">{item.label}</span>
+                <Icon className="h-5 w-5" />
+              </Button>
+            );
+          })}
+        </div>
 
-                return (
-                  <Button
-                    key={item.id}
-                    variant="ghost"
-                    size="default"
-                    onClick={() => navigate(item.path)}
-                    className={cn(
-                      'w-full flex-row-reverse justify-start gap-3 h-11 px-4 rounded-xl transition-colors',
-                      'hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground',
-                      active
-                        ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-lg'
-                        : 'text-sidebar-foreground/80'
-                    )}
-                  >
-                    <span className="flex-1 text-right font-medium text-sm">{item.label}</span>
-                    <Icon className="h-5 w-5" />
-                  </Button>
-                );
-              })}
-            </div>
-          </div>
-        ))}
+        <Accordion
+          type="multiple"
+          value={openSections}
+          onValueChange={(value) => setOpenSections(value as string[])}
+          className="space-y-3"
+        >
+          {sidebarSections.map((section) => (
+            <AccordionItem
+              key={section.id}
+              value={section.id}
+              className="border-none rounded-xl bg-sidebar-accent/30 backdrop-blur-sm"
+            >
+              <AccordionTrigger className="flex-row-reverse justify-between px-3 text-sm font-semibold text-sidebar-foreground/80">
+                <span>{section.title}</span>
+              </AccordionTrigger>
+              <AccordionContent className="px-1 pt-0">
+                <div className="space-y-2 py-2">
+                  {section.items.map((item) => {
+                    const Icon = item.icon;
+                    const active = isActive(item.path);
+
+                    return (
+                      <Button
+                        key={item.id}
+                        variant="ghost"
+                        size="default"
+                        onClick={() => handleNavigate(item.path)}
+                        className={cn(
+                          'w-full flex-row-reverse justify-start gap-3 h-11 px-4 rounded-xl transition-colors',
+                          active
+                            ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-lg'
+                            : 'text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground',
+                        )}
+                      >
+                        <span className="flex-1 text-right font-medium text-sm">{item.label}</span>
+                        <Icon className="h-5 w-5" />
+                      </Button>
+                    );
+                  })}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </nav>
 
       <div className="p-4 border-t border-sidebar-border">
