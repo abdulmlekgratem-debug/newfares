@@ -1,24 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { LucideIcon } from 'lucide-react';
-import {
-  Home,
-  MapPin,
-  Trash2,
-  Wrench,
-  FileText,
-  Users,
-  Merge,
-  TrendingUp,
-  TrendingDown,
-  CreditCard,
-  DollarSign,
-  Calculator,
-  Calendar,
-  BarChart3,
-  Settings,
-  LogOut,
-} from 'lucide-react';
+import { Chrome as Home, MapPin, Trash2, Wrench, FileText, Users, Merge, TrendingUp, TrendingDown, CreditCard, DollarSign, Calculator, Calendar, ChartBar as BarChart3, Settings, LogOut } from 'lucide-react';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
