@@ -19,7 +19,6 @@ import Users from "./pages/Users";
 import PricingList from "./pages/PricingList";
 import Settings from "./pages/Settings";
 import Reports from "./pages/Reports";
-import InstallationPricing from "./pages/InstallationPricing";
 import Expenses from "./pages/Expenses";
 import Customers from "./pages/Customers";
 import CustomerMerge from "./pages/CustomerMerge";
@@ -28,7 +27,6 @@ import SharedBillboards from "./pages/SharedBillboards";
 import SharedCompanies from "./pages/SharedCompanies";
 import Payments from "./pages/Payments";
 import CustomerBilling from "./pages/CustomerBilling";
-import PrintInstallationInvoice from "./pages/PrintInstallationInvoice";
 import RevenueManagement from "./pages/RevenueManagement";
 import ExpenseManagement from "./pages/ExpenseManagement";
 import { MainLayout } from "@/components/Layout/MainLayout";
@@ -187,16 +185,6 @@ const App = () => (
               }
             />
             <Route
-              path="/admin/installation-pricing"
-              element={
-                <ProtectedRoute requireAdmin>
-                  <MainLayout>
-                    <InstallationPricing />
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
               path="/admin/booking-requests"
               element={
                 <ProtectedRoute requireAdmin>
@@ -222,16 +210,6 @@ const App = () => (
                 <ProtectedRoute requireAdmin>
                   <MainLayout>
                     <CustomerBilling />
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/print-installation-invoice"
-              element={
-                <ProtectedRoute requireAdmin>
-                  <MainLayout>
-                    <PrintInstallationInvoice />
                   </MainLayout>
                 </ProtectedRoute>
               }
