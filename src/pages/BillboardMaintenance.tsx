@@ -266,7 +266,11 @@ export default function BillboardMaintenance() {
       const district = board.District?.trim() || '';
       const landmark = board.Nearest_Landmark?.trim() || '';
       const size = board.Size?.trim() || '';
-      const faces = (board as Record<string, unknown>).Faces ?? (board as Record<string, unknown>)['Number_of_Faces'] ?? '';
+      const rawFaces =
+        (board as Record<string, unknown>).Faces ??
+        (board as Record<string, unknown>)['Number_of_Faces'] ??
+        '';
+      const maintenanceType = board.maintenance_type?.trim() || '';
       let coords = String(
         (board as Record<string, unknown>).GPS_Coordinates ??
           board.GPS_Link ??
@@ -741,7 +745,7 @@ export default function BillboardMaintenance() {
                 <SelectContent>
                   <SelectItem value="صيانة دورية">صيانة دورية</SelectItem>
                   <SelectItem value="إصلاح">إصلاح</SelectItem>
-                  <SelectItem value="تنظيف">تنظي��</SelectItem>
+                  <SelectItem value="تنظيف">تنظيف</SelectItem>
                   <SelectItem value="استبدال قطع">استبدال قطع</SelectItem>
                   <SelectItem value="فحص">فحص</SelectItem>
                   <SelectItem value="أخرى">أخرى</SelectItem>
@@ -801,7 +805,7 @@ export default function BillboardMaintenance() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="scheduled-date">تاريخ الصيا��ة المجدولة</Label>
+              <Label htmlFor="scheduled-date">تاريخ الصيانة المجدولة</Label>
               <Input
                 id="scheduled-date"
                 type="datetime-local"
