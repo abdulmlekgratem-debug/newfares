@@ -344,7 +344,7 @@ export default function BillboardMaintenance() {
       .map(
         (pageRows) => `
               <div class="template-container page">
-                <img src="/bgc2.svg" alt="خلفية جد��ل اللوحات" class="template-image" onerror="console.warn('Failed to load bgc2.svg')" />
+                <img src="/bgc2.svg" alt="خلفية جدول اللوحات" class="template-image" onerror="console.warn('Failed to load bgc2.svg')" />
                 <div class="table-area">
                   <table class="btable" dir="rtl">
                     <colgroup>
@@ -371,8 +371,8 @@ export default function BillboardMaintenance() {
                             <td>${row.municipality}</td>
                             <td>${row.district}</td>
                             <td>${row.landmark}</td>
-                            <td>${row.status}</td>
-                            <td>${row.priority}</td>
+                            <td>${row.size || '-'}${row.status ? `<div class="cell-sub">${row.status}</div>` : ''}</td>
+                            <td>${row.priority}${row.faces ? `<div class="cell-sub">${row.faces}</div>` : ''}</td>
                             <td>${row.mapLink
                               ? `<a href="${row.mapLink}" target="_blank" rel="noopener">الخريطة</a>${
                                   row.lastMaintenanceDate
@@ -466,7 +466,7 @@ export default function BillboardMaintenance() {
     } catch (error) {
       console.error('Error completing maintenance:', error);
       toast({
-        title: "خطأ ��ي التحديث",
+        title: "خطأ في التحديث",
         description: "تعذر إكمال الصيانة",
         variant: "destructive"
       });
@@ -741,7 +741,7 @@ export default function BillboardMaintenance() {
                 <SelectContent>
                   <SelectItem value="صيانة دورية">صيانة دورية</SelectItem>
                   <SelectItem value="إصلاح">إصلاح</SelectItem>
-                  <SelectItem value="تنظيف">تنظيف</SelectItem>
+                  <SelectItem value="تنظيف">تنظي��</SelectItem>
                   <SelectItem value="استبدال قطع">استبدال قطع</SelectItem>
                   <SelectItem value="فحص">فحص</SelectItem>
                   <SelectItem value="أخرى">أخرى</SelectItem>
@@ -801,7 +801,7 @@ export default function BillboardMaintenance() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="scheduled-date">تاريخ الصيانة المجدولة</Label>
+              <Label htmlFor="scheduled-date">تاريخ الصيا��ة المجدولة</Label>
               <Input
                 id="scheduled-date"
                 type="datetime-local"
