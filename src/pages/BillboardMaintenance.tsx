@@ -271,6 +271,7 @@ export default function BillboardMaintenance() {
         (board as Record<string, unknown>)['Number_of_Faces'] ??
         '';
       const maintenanceType = board.maintenance_type?.trim() || '';
+      const faces = String(rawFaces ?? '').trim() || maintenanceType;
       let coords = String(
         (board as Record<string, unknown>).GPS_Coordinates ??
           board.GPS_Link ??
@@ -462,7 +463,7 @@ export default function BillboardMaintenance() {
       if (error) throw error;
 
       toast({
-        title: "تم إكمال الصيانة",
+        title: "تم إكمال الص��انة",
         description: "تم إكمال صيانة اللوحة وإزالتها من القائمة"
       });
 
