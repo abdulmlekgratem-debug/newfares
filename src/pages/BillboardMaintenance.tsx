@@ -323,7 +323,7 @@ export default function BillboardMaintenance() {
         district,
         landmark,
         size,
-        faces: String(faces || ''),
+        faces,
         status: maintenanceStatus,
         priority: priorityLabel,
         lastMaintenanceDate,
@@ -463,7 +463,7 @@ export default function BillboardMaintenance() {
       if (error) throw error;
 
       toast({
-        title: "تم إكمال الص��انة",
+        title: "تم إكمال الصيانة",
         description: "تم إكمال صيانة اللوحة وإزالتها من القائمة"
       });
 
@@ -498,7 +498,7 @@ export default function BillboardMaintenance() {
         <CardContent className="p-6">
           <div className="flex items-center justify-center h-32">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            <span className="mr-2">جاري تحميل بيانات الصيانة...</span>
+            <span className="mr-2">جاري تحميل بيان��ت الصيانة...</span>
           </div>
         </CardContent>
       </Card>
@@ -625,7 +625,7 @@ export default function BillboardMaintenance() {
         </CardContent>
       </Card>
 
-      {/* جدول اللوحات */}
+      {/* جدول اللوح��ت */}
       <Card>
         <CardHeader>
           <CardTitle>اللوحات التي تحتاج صيانة ({filteredBillboards.length})</CardTitle>
@@ -796,7 +796,7 @@ export default function BillboardMaintenance() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="technician">اسم الفني</Label>
+              <Label htmlFor="technician">اسم الفن��</Label>
               <Input
                 id="technician"
                 placeholder="اسم الفني المسؤول"
