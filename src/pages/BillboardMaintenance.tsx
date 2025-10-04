@@ -327,6 +327,7 @@ export default function BillboardMaintenance() {
     };
 
     const normalizedBoards = filteredBillboards.map(normalizeBoard);
+    type NormalizedBoard = (typeof normalizedBoards)[number];
 
     const START_Y = 63.53;
     const ROW_H = 13.818;
@@ -334,16 +335,16 @@ export default function BillboardMaintenance() {
     const ROWS_PER_PAGE = Math.max(1, Math.floor((PAGE_H - START_Y) / ROW_H));
 
     const tablePagesHtml = normalizedBoards
-      .reduce((pages: typeof normalizedBoards[], row, index) => {
+      .reduce((pages: NormalizedBoard[][], row, index) => {
         const pageIndex = Math.floor(index / ROWS_PER_PAGE);
         if (!pages[pageIndex]) pages[pageIndex] = [];
         pages[pageIndex].push(row);
         return pages;
-      }, [])
+      }, [] as NormalizedBoard[][])
       .map(
         (pageRows) => `
               <div class="template-container page">
-                <img src="/bgc2.svg" alt="خلفية جدول اللوحات" class="template-image" onerror="console.warn('Failed to load bgc2.svg')" />
+                <img src="/bgc2.svg" alt="خلفية جد��ل اللوحات" class="template-image" onerror="console.warn('Failed to load bgc2.svg')" />
                 <div class="table-area">
                   <table class="btable" dir="rtl">
                     <colgroup>
@@ -465,7 +466,7 @@ export default function BillboardMaintenance() {
     } catch (error) {
       console.error('Error completing maintenance:', error);
       toast({
-        title: "خطأ في التحديث",
+        title: "خطأ ��ي التحديث",
         description: "تعذر إكمال الصيانة",
         variant: "destructive"
       });
