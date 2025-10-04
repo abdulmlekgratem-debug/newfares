@@ -75,7 +75,7 @@ const sidebarSections: SidebarSection[] = [
   },
   {
     id: 'pricing',
-    title: 'التسعير والفواتير',
+    title: 'التسعير',
     items: [{ id: 'pricing', label: 'أسعار الإيجار', icon: Calculator, path: '/admin/pricing' }],
   },
   {

@@ -736,22 +736,36 @@ export default function BillboardMaintenance() {
 
             <div className="space-y-2">
               <Label htmlFor="maintenance-type">نوع الصيانة *</Label>
-              <Select
-                value={maintenanceForm.type}
-                onValueChange={(value) => setMaintenanceForm(prev => ({ ...prev, type: value }))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="اختر نوع الصيانة" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="صيانة دورية">صيانة دورية</SelectItem>
-                  <SelectItem value="إصلاح">إصلاح</SelectItem>
-                  <SelectItem value="تنظيف">تنظيف</SelectItem>
-                  <SelectItem value="استبدال قطع">استبدال قطع</SelectItem>
-                  <SelectItem value="فحص">فحص</SelectItem>
-                  <SelectItem value="أخرى">أخرى</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex gap-2">
+                <Select
+                  value={maintenanceForm.type}
+                  onValueChange={(value) => setMaintenanceForm(prev => ({ ...prev, type: value }))}
+                >
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="اختر نوع الصيانة أو أدخل يدوياً" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="صيانة دورية">صيانة دورية</SelectItem>
+                    <SelectItem value="إصلاح">إصلاح</SelectItem>
+                    <SelectItem value="تنظيف">تنظيف</SelectItem>
+                    <SelectItem value="استبدال قطع">استبدال قطع</SelectItem>
+                    <SelectItem value="فحص">فحص</SelectItem>
+                    <SelectItem value="طباعة">طباعة</SelectItem>
+                    <SelectItem value="تركيب">تركيب</SelectItem>
+                    <SelectItem value="دهان">دهان</SelectItem>
+                    <SelectItem value="كهرباء">كهرباء</SelectItem>
+                    <SelectItem value="لحام">لحام</SelectItem>
+                    <SelectItem value="أخرى">أخرى</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Input
+                  placeholder="أو اكتب هنا..."
+                  value={maintenanceForm.type}
+                  onChange={(e) => setMaintenanceForm(prev => ({ ...prev, type: e.target.value }))}
+                  className="flex-1"
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">اختر من القائمة أو اكتب نوع الصيانة يدوياً</p>
             </div>
 
             <div className="space-y-2">
