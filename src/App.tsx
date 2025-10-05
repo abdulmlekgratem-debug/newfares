@@ -29,6 +29,7 @@ import Payments from "./pages/Payments";
 import CustomerBilling from "./pages/CustomerBilling";
 import RevenueManagement from "./pages/RevenueManagement";
 import ExpenseManagement from "./pages/ExpenseManagement";
+import PrintInvoices from "./pages/PrintInvoices";
 import { MainLayout } from "@/components/Layout/MainLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
@@ -240,6 +241,16 @@ const App = () => (
                 <ProtectedRoute requireAdmin>
                   <MainLayout>
                     <Payments />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/print-invoices"
+              element={
+                <ProtectedRoute requireAdmin>
+                  <MainLayout>
+                    <PrintInvoices />
                   </MainLayout>
                 </ProtectedRoute>
               }
