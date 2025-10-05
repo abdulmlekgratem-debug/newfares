@@ -93,7 +93,12 @@ export const PrintInvoices = () => {
         return;
       }
 
-      setInvoices(data || []);
+      const normalized: PrintInvoice[] = (data || []).map((row) => ({
+        ...row,
+        total_amount: row.total_amount === null || row.total_amount === undefined ? null : Number(row.total_amount),
+      }));
+
+      setInvoices(normalized);
     } catch (error) {
       console.error(error);
       toast.error('حدث خطأ أثناء تحميل البيانات');
@@ -349,7 +354,9 @@ export const PrintInvoices = () => {
                     <TableCell className="text-right">{invoice.printer_name}</TableCell>
                     <TableCell className="text-right">{invoice.formattedDate}</TableCell>
                     <TableCell className="text-right">
-                      {invoice.total_amount ? `${invoice.total_amount.toLocaleString()} د.ل` : '—'}
+                      {typeof invoice.total_amount === 'number'
+                        ? `${invoice.total_amount.toLocaleString()} د.ل`
+                        : '—'}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2 text-sm">
@@ -578,7 +585,9 @@ export const PrintInvoices = () => {
                 <div>
                   <p className="text-sm text-muted-foreground">المبلغ الإجمالي</p>
                   <p className="text-base font-semibold">
-                    {selectedInvoice.total_amount ? `${selectedInvoice.total_amount.toLocaleString()} د.ل` : '—'}
+                    {typeof selectedInvoice.total_amount === 'number'
+                      ? `${selectedInvoice.total_amount.toLocaleString()} د.ل`
+                      : '—'}
                   </p>
                 </div>
               </div>
@@ -624,7 +633,7 @@ export const PrintInvoices = () => {
               </div>
 
               <div className="text-sm text-muted-foreground">
-                <p>تاريخ الإنشاء: {format(new Date(selectedInvoice.created_at), 'd MMMM yyyy، hh:mm a', { locale: ar })}</p>
+                <p>تاريخ الإ��شاء: {format(new Date(selectedInvoice.created_at), 'd MMMM yyyy، hh:mm a', { locale: ar })}</p>
                 <p>آخر تحديث: {format(new Date(selectedInvoice.updated_at), 'd MMMM yyyy، hh:mm a', { locale: ar })}</p>
               </div>
             </div>
