@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
-import { Printer, Plus, FileText } from 'lucide-react';
+import { Printer, Plus, FileText, Calculator } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -49,6 +50,7 @@ const generateInvoiceNumber = () => {
 const sanitizeFileName = (value: string) => value.replace(/[^a-zA-Z0-9_.-]/g, '_');
 
 export const PrintInvoices = () => {
+  const navigate = useNavigate();
   const [invoices, setInvoices] = useState<PrintInvoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -312,10 +314,20 @@ export const PrintInvoices = () => {
           <h1 className="text-2xl font-bold text-foreground">فواتير الطباعة</h1>
           <p className="text-muted-foreground">إدارة جميع فواتير الطباعة الخاصة بالعملاء وتصاميم الطباعة</p>
         </div>
-        <Button onClick={() => setAddDialogOpen(true)} className="flex items-center gap-2">
-          <Plus className="h-5 w-5" />
-          <span>إضافة فاتورة طباعة</span>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={() => navigate('/admin/customer-billing?modernPrint=1')}
+            className="flex items-center gap-2"
+          >
+            <Calculator className="h-5 w-5" />
+            <span>فاتورة طباعة عصرية</span>
+          </Button>
+          <Button onClick={() => setAddDialogOpen(true)} className="flex items-center gap-2">
+            <Plus className="h-5 w-5" />
+            <span>إضافة فاتورة طباعة</span>
+          </Button>
+        </div>
       </div>
 
       <Card>
@@ -559,7 +571,7 @@ export const PrintInvoices = () => {
             <div className="space-y-4">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                  <p className="text-sm text-muted-foreground">رقم الفاتورة</p>
+                  <p className="text-sm text-muted-foreground">رقم الفا��ورة</p>
                   <p className="text-base font-semibold">{selectedInvoice.invoice_number}</p>
                 </div>
                 <div>
@@ -633,7 +645,7 @@ export const PrintInvoices = () => {
               </div>
 
               <div className="text-sm text-muted-foreground">
-                <p>تاريخ الإ��شاء: {format(new Date(selectedInvoice.created_at), 'd MMMM yyyy، hh:mm a', { locale: ar })}</p>
+                <p>تاريخ الإنشاء: {format(new Date(selectedInvoice.created_at), 'd MMMM yyyy، hh:mm a', { locale: ar })}</p>
                 <p>آخر تحديث: {format(new Date(selectedInvoice.updated_at), 'd MMMM yyyy، hh:mm a', { locale: ar })}</p>
               </div>
             </div>
