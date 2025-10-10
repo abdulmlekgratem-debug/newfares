@@ -87,6 +87,15 @@ const normalizeContract = (record: any): Contract => {
   };
 };
 
+const formatPercent = (value: number): string => {
+  if (!Number.isFinite(value)) {
+    return '0';
+  }
+  return value.toLocaleString('ar-LY', {
+    maximumFractionDigits: value % 1 === 0 ? 0 : 2,
+  });
+};
+
 export default function Expenses() {
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
@@ -483,7 +492,7 @@ export default function Expenses() {
         .upsert({ contract_id: contractId, excluded: exclude });
 
       if (error) {
-        console.error('خطأ ��ي تحديث حالة الاستبعاد:', error);
+        console.error('خطأ في تحديث حالة الاستبعاد:', error);
         toast.error('تعذر تحديث حالة العقد');
         return;
       }
