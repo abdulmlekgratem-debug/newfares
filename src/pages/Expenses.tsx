@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -12,10 +13,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { Loader2, DollarSign, Plus, Calculator, TrendingUp, TrendingDown, Lock, Calendar, Hash } from 'lucide-react';
 
 interface Contract {
-  id: number;
+  id: string;
   contract_number: string;
   customer_name: string;
-  fee: number;
+  feePercent: number;
+  feeAmount: number;
   start_date: string;
   total_amount: number;
   status: string;
