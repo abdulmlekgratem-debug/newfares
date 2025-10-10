@@ -277,10 +277,11 @@ export default function Expenses() {
       }
       
       const total = contract.total_amount || 0;
-      const feePercent = contract.fee || 3;
-      return sum + Math.round(total * (feePercent / 100));
+      const feePercent = contract.feePercent ?? 3;
+      const feeAmount = contract.feeAmount > 0 ? contract.feeAmount : Math.round(total * (feePercent / 100));
+      return sum + feeAmount;
     }, 0);
-    
+
     const totalWithdrawn = withdrawals.reduce((sum, w) => sum + w.amount, 0);
     const remainingPool = Math.max(0, poolTotal - totalWithdrawn);
 
@@ -628,7 +629,7 @@ export default function Expenses() {
                     </div>
                     <div className="expenses-preview-item">
                       <p className="expenses-preview-label">
-                        {closureType === 'period' ? 'إلى تاريخ' : 'إل�� عقد'}
+                        {closureType === 'period' ? 'إلى تاريخ' : 'إلى عقد'}
                       </p>
                       <p className="expenses-preview-text">
                         {closureType === 'period' 
@@ -816,7 +817,7 @@ export default function Expenses() {
                 {closures.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={8} className="expenses-empty-state">
-                      لا توجد ت��كيرات مسجلة
+                      لا توجد تسكيرات مسجلة
                     </TableCell>
                   </TableRow>
                 )}
