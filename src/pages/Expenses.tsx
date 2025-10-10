@@ -46,6 +46,47 @@ interface PeriodClosure {
   notes?: string;
 }
 
+const toNumber = (value: unknown): number => {
+  if (value === null || value === undefined) {
+    return 0;
+  }
+  const num = Number(value);
+  return Number.isFinite(num) ? num : 0;
+};
+
+const normalizeContract = (record: any): Contract => {
+  const contractNumberRaw = record?.Contract_Number ?? record?.contract_number ?? record?.id ?? record?.ID ?? '';
+  const contractNumber = contractNumberRaw ? String(contractNumberRaw) : '';
+  const totalAmount = toNumber(record?.['Total Rent'] ?? record?.rent_cost ?? record?.total_amount);
+  const feeAmountRaw = toNumber(record?.fee ?? record?.fee_amount);
+  let feePercent = toNumber(record?.operating_fee_rate);
+
+  if (feePercent <= 0 && totalAmount > 0 && feeAmountRaw > 0) {
+    feePercent = (feeAmountRaw / totalAmount) * 100;
+  }
+
+  if (feePercent <= 0) {
+    feePercent = 3;
+  }
+
+  const normalizedFeePercent = Math.round(feePercent * 100) / 100;
+  const feeAmount = feeAmountRaw > 0 ? feeAmountRaw : Math.round(totalAmount * (normalizedFeePercent / 100));
+
+  const fallbackIdSource = record?.id ?? record?.ID ?? contractNumber;
+  const id = fallbackIdSource ? String(fallbackIdSource) : `contract-${Math.random().toString(36).slice(2, 10)}`;
+
+  return {
+    id,
+    contract_number: contractNumber,
+    customer_name: record?.['Customer Name'] ?? record?.customer_name ?? '',
+    feePercent: normalizedFeePercent,
+    feeAmount,
+    start_date: record?.['Contract Date'] ?? record?.start_date ?? record?.['Start Date'] ?? '',
+    total_amount: totalAmount,
+    status: record?.status ?? 'active',
+  };
+};
+
 export default function Expenses() {
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
@@ -430,7 +471,7 @@ export default function Expenses() {
       setContractEnd('');
       setClosureNotes('');
       
-      const typeText = closureType === 'period' ? 'الفترة' : 'نطاق العقود';
+      const typeText = closureType === 'period' ? 'الفترة' : 'نطاق العقو��';
       toast.success(`تم إغلاق ${typeText} بنجاح (${contractsInRange.length} عقد)`);
       
     } catch (error) {
@@ -706,7 +747,7 @@ export default function Expenses() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="text-right">التاريخ</TableHead>
-                  <TableHead className="text-right">المبلغ</TableHead>
+                  <TableHead className="text-right">ال��بلغ</TableHead>
                   <TableHead className="text-right">الطريقة</TableHead>
                   <TableHead className="text-right">البيان</TableHead>
                 </TableRow>
@@ -761,7 +802,7 @@ export default function Expenses() {
                     <TableCell className="text-right">{new Date(closure.closure_date).toLocaleDateString('ar-LY')}</TableCell>
                     <TableCell className="text-right">
                       <Badge variant={closure.closure_type === 'period' ? 'default' : 'secondary'}>
-                        {closure.closure_type === 'period' ? 'فترة زمنية' : 'نطاق عقود'}
+                        {closure.closure_type === 'period' ? 'فترة زمنية' : 'نطاق عقو��'}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
