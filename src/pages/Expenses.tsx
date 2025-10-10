@@ -681,22 +681,25 @@ export default function Expenses() {
                 {contracts.map(contract => {
                   const id = contract.id.toString();
                   const total = contract.total_amount || 0;
-                  const feePercent = contract.fee || 3;
-                  const calculatedAmount = Math.round(total * (feePercent / 100));
+                  const feePercent = contract.feePercent ?? 3;
+                  const calculatedAmount = contract.feeAmount > 0 ? contract.feeAmount : Math.round(total * (feePercent / 100));
                   const excluded = excludedIds.has(id);
                   const closed = isContractClosed(contract);
-                  
+                  const formattedPercent = formatPercent(feePercent);
+                  const formattedAmount = calculatedAmount.toLocaleString('ar-LY', { maximumFractionDigits: 2 });
+                  const formattedTotal = total.toLocaleString('ar-LY', { maximumFractionDigits: 2 });
+
                   return (
                     <TableRow key={id}>
                       <TableCell className="expenses-contract-number text-right">{contract.contract_number}</TableCell>
                       <TableCell className="text-right">{contract.customer_name}</TableCell>
                       <TableCell className="text-right">{contract.start_date ? new Date(contract.start_date).toLocaleDateString('ar-LY') : '—'}</TableCell>
                       <TableCell className="text-right">
-                        <Badge variant="secondary">{feePercent}%</Badge>
+                        <Badge variant="secondary">{formattedPercent}%</Badge>
                       </TableCell>
-                      <TableCell className="text-right">{total.toLocaleString()} د.ل</TableCell>
+                      <TableCell className="text-right">{formattedTotal} د.ل</TableCell>
                       <TableCell className={`text-right ${excluded || closed ? 'expenses-amount-excluded' : 'expenses-amount-calculated'}`}>
-                        {calculatedAmount.toLocaleString()} د.ل
+                        {formattedAmount} د.ل
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end">
@@ -902,7 +905,7 @@ export default function Expenses() {
           <UIDialog.DialogHeader>
             <UIDialog.DialogTitle>تسكير حساب</UIDialog.DialogTitle>
             <UIDialog.DialogDescription>
-              اختر طريقة التسكير: بالفترة الزمنية أو بنطاق أرقام العقود
+              ا��تر طريقة التسكير: بالفترة الزمنية أو بنطاق أرقام العقود
             </UIDialog.DialogDescription>
           </UIDialog.DialogHeader>
           <div className="expenses-dialog-form">
