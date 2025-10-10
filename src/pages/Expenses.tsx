@@ -419,8 +419,9 @@ export default function Expenses() {
 
     // Calculate totals for this range
     const totalAmount = contractsInRange.reduce((sum, contract) => {
-      const feePercent = contract.fee || 3;
-      return sum + Math.round(contract.total_amount * (feePercent / 100));
+      const feePercent = contract.feePercent ?? 3;
+      const feeAmount = contract.feeAmount > 0 ? contract.feeAmount : Math.round(contract.total_amount * (feePercent / 100));
+      return sum + feeAmount;
     }, 0);
 
     const totalWithdrawn = 0;
@@ -482,7 +483,7 @@ export default function Expenses() {
         .upsert({ contract_id: contractId, excluded: exclude });
 
       if (error) {
-        console.error('خطأ في تحديث حالة الاستبعاد:', error);
+        console.error('خطأ ��ي تحديث حالة الاستبعاد:', error);
         toast.error('تعذر تحديث حالة العقد');
         return;
       }
@@ -602,9 +603,10 @@ export default function Expenses() {
               {(() => {
                 const contractsInRange = getContractsInRange();
                 const totalAmount = contractsInRange.reduce((sum, contract) => {
-                  const feePercent = contract.fee || 3;
-                  return sum + Math.round(contract.total_amount * (feePercent / 100));
-                }, 0);
+      const feePercent = contract.feePercent ?? 3;
+      const feeAmount = contract.feeAmount > 0 ? contract.feeAmount : Math.round(contract.total_amount * (feePercent / 100));
+      return sum + feeAmount;
+    }, 0);
                 
                 return (
                   <>
