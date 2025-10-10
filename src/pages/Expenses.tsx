@@ -132,23 +132,16 @@ export default function Expenses() {
         console.error('خطأ في تحميل العقود:', contractsError);
         toast.error('فشل في تحميل العقود');
       } else {
-        const mappedContracts = (contractsData || []).map(c => ({
-          id: c.id,
-          contract_number: c.Contract_Number || c.contract_number || c.id?.toString() || '',
-          customer_name: c['Customer Name'] || c.customer_name || '',
-          fee: Number(c.fee) || 3,
-          start_date: c['Contract Date'] || c.start_date || c['Start Date'] || '',
-          total_amount: Number(c['Total Rent']) || Number(c.rent_cost) || Number(c.total_amount) || 0,
-          status: c.status || 'active'
-        }));
-        
-        // ترتيب إضافي في الكود للتأكد
+        const mappedContracts = (contractsData || []).map(normalizeContract);
+
         mappedContracts.sort((a, b) => {
-          const numA = parseInt(a.contract_number) || 0;
-          const numB = parseInt(b.contract_number) || 0;
-          return numB - numA; // ترتيب تنازلي
+          const numA = parseInt(a.contract_number, 10);
+          const numB = parseInt(b.contract_number, 10);
+          const safeA = Number.isFinite(numA) ? numA : 0;
+          const safeB = Number.isFinite(numB) ? numB : 0;
+          return safeB - safeA;
         });
-        
+
         setContracts(mappedContracts);
       }
 
@@ -471,7 +464,7 @@ export default function Expenses() {
       setContractEnd('');
       setClosureNotes('');
       
-      const typeText = closureType === 'period' ? 'الفترة' : 'نطاق العقو��';
+      const typeText = closureType === 'period' ? 'الفترة' : 'نطاق العقود';
       toast.success(`تم إغلاق ${typeText} بنجاح (${contractsInRange.length} عقد)`);
       
     } catch (error) {
@@ -635,7 +628,7 @@ export default function Expenses() {
                     </div>
                     <div className="expenses-preview-item">
                       <p className="expenses-preview-label">
-                        {closureType === 'period' ? 'إلى تاريخ' : 'إلى عقد'}
+                        {closureType === 'period' ? 'إلى تاريخ' : 'إل�� عقد'}
                       </p>
                       <p className="expenses-preview-text">
                         {closureType === 'period' 
@@ -747,7 +740,7 @@ export default function Expenses() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="text-right">التاريخ</TableHead>
-                  <TableHead className="text-right">ال��بلغ</TableHead>
+                  <TableHead className="text-right">المبلغ</TableHead>
                   <TableHead className="text-right">الطريقة</TableHead>
                   <TableHead className="text-right">البيان</TableHead>
                 </TableRow>
@@ -802,7 +795,7 @@ export default function Expenses() {
                     <TableCell className="text-right">{new Date(closure.closure_date).toLocaleDateString('ar-LY')}</TableCell>
                     <TableCell className="text-right">
                       <Badge variant={closure.closure_type === 'period' ? 'default' : 'secondary'}>
-                        {closure.closure_type === 'period' ? 'فترة زمنية' : 'نطاق عقو��'}
+                        {closure.closure_type === 'period' ? 'فترة زمنية' : 'نطاق عقود'}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
@@ -823,7 +816,7 @@ export default function Expenses() {
                 {closures.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={8} className="expenses-empty-state">
-                      لا توجد تسكيرات مسجلة
+                      لا توجد ت��كيرات مسجلة
                     </TableCell>
                   </TableRow>
                 )}
